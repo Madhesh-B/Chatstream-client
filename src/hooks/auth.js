@@ -14,7 +14,7 @@ export const useLogin = () => {
       dispatch(initializeData({ username, email, uid, profileURL }));
       navigate("/dashboard");
     } catch (error) {
-      console.log(error);
+      return error?.response?.data?.message || "Login failed. Please try again.";
     }
   }
 }
@@ -26,7 +26,7 @@ export const useSignup = () => {
       const res = await api.post("/api/auth/signup", { userName, email, password });
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      return error?.response?.data?.message || "Signup failed. Please try again.";
     }
   };
 }
@@ -40,7 +40,7 @@ export const useLogout = () => {
       dispatch(resetData());
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      return error?.response?.data?.message || "Logout failed. Please try again.";
     }
   }
 }

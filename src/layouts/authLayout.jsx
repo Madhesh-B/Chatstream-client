@@ -1,18 +1,27 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import logo from "./../assets/Chatstream_logo.webp";
 
 const AuthLayout = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
   return (
-    <div className="w-100 h-100 d-flex justify-content-center align-items-center bg-black">
+    <div className="container-fluid p-0 w-100 h-100 bg-black">
       <div
-        className="card w-100 h-100 d-flex flex-row bg-black text-light"
+        className="row w-100 h-100 mx-auto bg-black text-light"
         style={{ height: "65%", borderRadius: "20px" }}
       >
         <div
-          className="d-flex justify-content-center align-items-center user-select-none"
-          style={{ width: "70%" }}
+          className="d-md-flex d-none justify-content-center align-items-center col-md-8 user-select-none"
         >
           <div className="user-select-none">
             <img
@@ -23,17 +32,16 @@ const AuthLayout = () => {
             />
           </div>
           <div
-            className="text-light fw-fw-semibold"
+            className="text-light fw-semibold"
             style={{ fontSize: "90px" }}
           >
             Chatstream
           </div>
         </div>
         <div
-          className="border-start border-light d-flex justify-content-center align-items-center"
-          style={{ width: "30%" }}
+          className="border-start border-light col-md-4 col-12 d-flex justify-content-center align-items-center"
         >
-          <Outlet />
+            <Outlet />
         </div>
       </div>
     </div>

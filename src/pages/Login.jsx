@@ -25,6 +25,10 @@ const Login = () => {
   const login = useLogin();
 
   useEffect(() => {
+    document.title = "ChatStream • Login";
+  }, []);
+
+  useEffect(() => {
     if (toastMessage.text && toastMessage.type) {
       setShow(true);
     }

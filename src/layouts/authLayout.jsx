@@ -10,7 +10,7 @@ const AuthLayout = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      navigate("/user/profile");
     }
   }, [isAuthenticated, navigate]);
 

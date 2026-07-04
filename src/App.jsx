@@ -5,7 +5,9 @@ import Loading from "./components/Loading";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+
 import AuthLayout from "./layouts/authLayout";
+import UserRoutes from "./routes/userRoutes";
 
 function App() {
   return (
@@ -14,11 +16,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-
           <Route element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Route>
+          <Route path="/user/*" element={<UserRoutes />} />
         </Routes>
       </BrowserRouter>
     </div>

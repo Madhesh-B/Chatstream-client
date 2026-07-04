@@ -7,7 +7,7 @@ const Loading = () => {
     <div
       className={`bg-black w-100 h-100 ${isLoading ? "d-flex" : "d-none"} justify-content-center align-items-center position-absolute top-0 start-0 z-3`}
     >
-      <div className="spinner-border text-primary"></div>
+      <div className="spinner-border text-primary" />
     </div>
   );
 };

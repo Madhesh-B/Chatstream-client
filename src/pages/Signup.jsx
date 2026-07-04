@@ -25,6 +25,10 @@ const Signup = () => {
   const signup = useSignup();
 
   useEffect(() => {
+    document.title = "ChatStream • Signup";
+  }, []);
+
+  useEffect(() => {
     if (toastMessage.text && toastMessage.type) {
       setShow(true);
     }

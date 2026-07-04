@@ -7,13 +7,15 @@ import api from "../services/api";
 export const useLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  return async (userName, password, rememberMe) => {
+  return async (username, password, rememberMe) => {
     try {
-      const res = await api.post("/api/auth/login", { userName, password, rememberMe });
-      const { username, email, uid, profileURL } = res.data;
-      dispatch(initializeData({ username, email, uid, profileURL }));
-      navigate("/dashboard");
+      const res = await api.post("/api/auth/login", { userName: username, password, rememberMe });
+      const { userName, email, role, uid, profileURL } = res.data;
+      dispatch(initializeData({ userName, email, role, uid, profileURL }));
+      navigate("/user/profile");
     } catch (error) {
+      console.log(error);
+
       return error?.response?.data?.message || "Login failed. Please try again.";
     }
   }

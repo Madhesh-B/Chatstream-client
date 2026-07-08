@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { X } from "lucide-react";
 import { FaLock, FaUser } from "react-icons/fa";
-import { Toast } from "react-bootstrap";
 
 import { useLogin } from "../hooks/auth";
+import { useToaster } from "../hooks/toast";
 
 const Login = () => {
   const [credientials, setCredientials] = useState({
@@ -12,27 +11,17 @@ const Login = () => {
     password: "",
     rememberMe: false,
   });
-  const [show, setShow] = useState(false);
-  const [toastMessage, setToastMessage] = useState({
-    text: "",
-    type: "",
-  });
   const [loading, setLoading] = useState(false);
 
   const userNameInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
   const login = useLogin();
+  const toast = useToaster();
 
   useEffect(() => {
     document.title = "ChatStream • Login";
   }, []);
-
-  useEffect(() => {
-    if (toastMessage.text && toastMessage.type) {
-      setShow(true);
-    }
-  }, [toastMessage]);
 
   const handleInputChange = (e) => {
     const { id, value, type, checked } = e.target;
@@ -45,156 +34,118 @@ const Login = () => {
   const handleLogin = async () => {
     let userName = credientials.userName.trim();
     let password = credientials.password.trim();
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userName)) {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userName))
       userName = userName.toLowerCase();
-    }
-    if (!userName || !password) {
-      setToastMessage({
-        text: "Please fill in all fields.",
-        type: "error",
-      });
-      return;
-    }
+
+    if (!userName || !password)
+      return toast("Please fill in all fields.", "error");
+
     setLoading(true);
 
     const res = await login(userName, password, credientials.rememberMe);
     setLoading(false);
 
-    if (res) {
-      setToastMessage({
-        text: res,
-        type: "error",
-      });
-      return;
-    }
-
-    setToastMessage({
-      text: "Login Successful!",
-      type: "success",
-    });
+    if (res) return toast(res, "error");
+    toast("Login Successful!", "success");
   };
 
   return (
-    <>
-      <Toast
-        show={show}
-        onClose={() => setShow(false)}
-        delay={3000}
-        autohide
-        style={{ top: "20px", zIndex: 9999 }}
-        className={`position-fixed end-0 m-3 ${toastMessage.type === "success" ? "bg-success" : "bg-danger"}`}
-      >
-        <Toast.Body>
-          <div className="w-100 d-flex align-items-center justify-content-between">
-            <div className="text-light">{toastMessage.text}</div>
-            <X
-              size={20}
-              onClick={() => setShow(false)}
-              style={{ cursor: "pointer" }}
-            />
-          </div>
-        </Toast.Body>
-      </Toast>
-      <div className="w-100 px-4 pt-3">
-        <div className="text-center mb-5">
-          <div className="text-light h1">Login</div>
-          <div className="text-secondary text-sm-center">Welcome Back!</div>
-        </div>
-        <div className="position-relative form-control bg-black border-0">
-          <label htmlFor="username" className="form-label text-secondary ms-2">
-            Enter Your Username or email:
-          </label>
-          <FaUser
-            className="position-absolute text-secondary ms-2"
-            style={{ top: "60%", left: "12px" }}
-          />
-          <input
-            ref={userNameInputRef}
-            type="text"
-            className="form-control bg-black text-light border border-secondary"
-            style={{ paddingLeft: "30px" }}
-            value={credientials.userName}
-            onChange={handleInputChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                passwordInputRef.current.focus();
-              }
-            }}
-            name="username"
-            autoCorrect="off"
-            autoCapitalize="off"
-            id="userName"
-          />
-        </div>
-        <div className="position-relative form-control bg-black border-0">
-          <label htmlFor="password" className="form-label text-secondary ms-2">
-            Enter Your Password:
-          </label>
-          <FaLock
-            className="position-absolute text-secondary ms-2"
-            style={{ top: "60%", left: "12px" }}
-          />
-          <input
-            ref={passwordInputRef}
-            type="password"
-            className="form-control bg-black text-light border border-secondary"
-            style={{ paddingLeft: "30px" }}
-            id="password"
-            value={credientials.password}
-            onChange={handleInputChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleLogin();
-              }
-            }}
-          />
-        </div>
-        <div className="form-control ms-2 d-flex align-items-center bg-black border-0">
-          <input
-            type="checkbox"
-            className="form-check-input  bg-black text-light border border-secondary"
-            style={{ cursor: "pointer" }}
-            id="rememberMe"
-            checked={credientials.rememberMe}
-            onChange={handleInputChange}
-          />
-          <label
-            htmlFor="rememberMe"
-            className="text-secondary ms-2 user-select-none"
-            style={{ cursor: "pointer" }}
-          >
-            Remember Me:
-          </label>
-        </div>
-        <div className="mx-auto mt-3" style={{ width: "90%" }}>
-          <button
-            className="btn btn-outline-light py-2 w-100 mt-3"
-            onClick={handleLogin}
-            disabled={loading}
-          >
-            {loading ? (
-              <div
-                className="spinner-border spinner-border-sm"
-                style={{ width: "1rem", height: "1rem" }}
-              />
-            ) : (
-              "Login"
-            )}
-          </button>
-        </div>
-        <div
-          className="mx-auto mt-2 w-100 text-center"
-          style={{ width: "100%" }}
-        >
-          <span className="text-secondary user-select-none">
-            Don't Have an Account?{" "}
-            <Link to="/signup" className="text-decoration-none">
-              Signup
-            </Link>
-          </span>
-        </div>
+    <div className="w-100 px-4 pt-3">
+      <div className="text-center mb-5">
+        <div className="text-light h1">Login</div>
+        <div className="text-secondary text-sm-center">Welcome Back!</div>
       </div>
-    </>
+      <div className="position-relative form-control bg-black border-0">
+        <label htmlFor="username" className="form-label text-secondary ms-2">
+          Enter Your Username or email:
+        </label>
+        <FaUser
+          className="position-absolute text-secondary ms-2"
+          style={{ top: "60%", left: "12px" }}
+        />
+        <input
+          ref={userNameInputRef}
+          type="text"
+          className="form-control bg-black text-light border border-secondary"
+          style={{ paddingLeft: "30px" }}
+          value={credientials.userName}
+          onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              passwordInputRef.current.focus();
+            }
+          }}
+          name="username"
+          autoCorrect="off"
+          autoCapitalize="off"
+          id="userName"
+        />
+      </div>
+      <div className="position-relative form-control bg-black border-0">
+        <label htmlFor="password" className="form-label text-secondary ms-2">
+          Enter Your Password:
+        </label>
+        <FaLock
+          className="position-absolute text-secondary ms-2"
+          style={{ top: "60%", left: "12px" }}
+        />
+        <input
+          ref={passwordInputRef}
+          type="password"
+          className="form-control bg-black text-light border border-secondary"
+          style={{ paddingLeft: "30px" }}
+          id="password"
+          value={credientials.password}
+          onChange={handleInputChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleLogin();
+            }
+          }}
+        />
+      </div>
+      <div className="form-control ms-2 d-flex align-items-center bg-black border-0">
+        <input
+          type="checkbox"
+          className="form-check-input  bg-black text-light border border-secondary"
+          style={{ cursor: "pointer" }}
+          id="rememberMe"
+          checked={credientials.rememberMe}
+          onChange={handleInputChange}
+        />
+        <label
+          htmlFor="rememberMe"
+          className="text-secondary ms-2 user-select-none"
+          style={{ cursor: "pointer" }}
+        >
+          Remember Me:
+        </label>
+      </div>
+      <div className="mx-auto mt-3" style={{ width: "90%" }}>
+        <button
+          className="btn btn-outline-light py-2 w-100 mt-3"
+          onClick={handleLogin}
+          disabled={loading}
+        >
+          {loading ? (
+            <div
+              className="spinner-border spinner-border-sm"
+              style={{ width: "1rem", height: "1rem" }}
+            />
+          ) : (
+            "Login"
+          )}
+        </button>
+      </div>
+      <div className="mx-auto mt-2 w-100 text-center" style={{ width: "100%" }}>
+        <span className="text-secondary user-select-none">
+          Don't Have an Account?{" "}
+          <Link to="/signup" className="text-decoration-none">
+            Signup
+          </Link>
+        </span>
+      </div>
+    </div>
   );
 };
 

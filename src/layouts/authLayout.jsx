@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import logo from "./../assets/Chatstream_logo.webp";
+import logo from "./../assets/images/Chatstream_logo.webp";
 
 const AuthLayout = () => {
   const navigate = useNavigate();

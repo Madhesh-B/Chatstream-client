@@ -10,9 +10,12 @@ import Signup from "./pages/Signup";
 import AuthLayout from "./layouts/authLayout";
 import UserRoutes from "./routes/userRoutes";
 
+import { useJoinChat } from "./hooks/chatSocket";
+
 function App() {
+  useJoinChat()("123");
   return (
-    <div className="vw-100 vh-100 overflow-auto">
+    <div className="cursor-cw vw-100 vh-100 overflow-auto">
       <Loading />
       <Toaster />
       <BrowserRouter>

@@ -3,5 +3,13 @@ html {
 }
 
 body {
-  background: #000;
+  background: #000; 
+}
+
+.cursor-cw {
+  cursor: url("./assets/cursor/cursor-white-stroke.png"), auto !important;  
+}
+
+.cursor-co {
+  cursor: url("./assets/cursor/cursor.png"), auto !important;  
 }

@@ -40,7 +40,7 @@ export const useDeleteSignal = () => {
   }
 }
 
-export const recieveSignal = () => {
+export const useRecieveSignal = () => {
   const addMessage = useAddMessage();
   const editMessage = useEditMessage();
   const deleteMessage = useDeleteMessage();

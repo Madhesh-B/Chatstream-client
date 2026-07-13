@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { useSocketEmit, useSocketOn } from "./socketFunction";
 import { useAddMessage, useDeleteMessage, useEditMessage, useSetPreviousChat, useSetSendersInfo } from "./chatOperation"
+import { useToaster } from "./toast";
 
 
 export const useJoinChat = () => {
@@ -45,6 +46,7 @@ export const recieveSignal = () => {
   const deleteMessage = useDeleteMessage();
   const setPreviousChat = useSetPreviousChat();
   const setSenderInfo = useSetSendersInfo();
+  const toast = useToaster();
 
   useSocketOn("set_sender_info", ({ name, chatId }) => {
     setSenderInfo(name, chatId);
@@ -54,8 +56,8 @@ export const recieveSignal = () => {
     setPreviousChat(chats);
   });
 
-  useSocketOn("recieve_message", ({ content, senderId, timestamp }) => {
-    addMessage(content, senderId, timestamp);
+  useSocketOn("recieve_message", ({ id, content, senderId, timestamp }) => {
+    addMessage(id, content, senderId, timestamp);
   });
 
   useSocketOn("edit_message", ({ messageId, content }) => {
@@ -64,5 +66,9 @@ export const recieveSignal = () => {
 
   useSocketOn("delete_message", ({ id, senderName }) => {
     deleteMessage(id, senderName);
+  });
+
+  useSocketOn("error_message", ({ message }) => {
+    toast(message, "danger");
   });
 }

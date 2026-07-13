@@ -17,7 +17,7 @@ const chatSlice = createSlice({
     },
     addmessage: (state, action) => {
       const newMessage = {
-        id: crypto.randomUUID(),
+        id: action.payload.id,
         content: action.payload.content,
         senderId: action.payload.senderId,
         timestamp: action.payload.timestamp,

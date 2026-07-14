@@ -13,3 +13,8 @@ body {
 .cursor-co {
   cursor: url("./assets/cursor/cursor.png"), auto !important;  
 }
+
+.hover\:bg-gray:hover {
+  background: rgb(39, 38, 38);
+  cursor: pointer;
+}

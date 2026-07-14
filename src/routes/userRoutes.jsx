@@ -4,6 +4,8 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Cookie from "js-cookie";
 
 import Profile from "./../pages/user/Profile";
+import ChatConainer from "../pages/user/chats/ChatConainer";
+
 import { initializeData } from "./../features/authSlice";
 import { fethData } from "../api/fethData";
 
@@ -31,6 +33,7 @@ const userRoutes = () => {
   return (
     <Routes>
       <Route path="/profile" element={<Profile />} />
+      <Route path="/chats" element={<ChatConainer />} />
     </Routes>
   );
 };

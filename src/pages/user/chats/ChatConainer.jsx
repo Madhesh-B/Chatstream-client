@@ -1,10 +1,35 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { SearchIcon, User, X } from "lucide-react";
 
 import ChatstreamLogo from "./../../../assets/images/Chatstream_logo.webp";
+import { useGetChatList } from "../../../hooks/chatSocket";
 
 const ChatConainer = () => {
   const [search, setSearch] = useState("");
+
+  const getChatList = useGetChatList();
+
+  useEffect(() => {
+    getChatList();
+  }, []);
+
+  const { chatList } = useSelector((state) => state.chatList);
+
+  let contactList = chatList.filter((chat) => {
+    console.log(chat);
+    
+    return chat.senderName.includes(search);
+  });
+
+  // {
+    // profileURL: "https://assets.leetcode.com/users/Madhesh-B/avatar_1756132799.png",
+    // senderName: "Madhesh",
+  // },
+  // {
+  //   profileURL: "",
+  //   senderName: "Tharun",
+  // },
 
   return (
     <div className="w-100 h-100 bg-dark overflow-hidden">
@@ -14,6 +39,7 @@ const ChatConainer = () => {
             <img
               src={ChatstreamLogo}
               alt="Chatstream Logo"
+              draggable={false}
               style={{ width: "100px", height: "100px" }}
             />
             <span className="text-white h1 mt-2">Chatstream</span>
@@ -44,28 +70,25 @@ const ChatConainer = () => {
             />
           </div>
           <div className="flex-grow-1 w-100 h-auto p-2 mt-3">
-            {[
-              {
-                profileURL: "",
-                senderName: "",
-              },
-              {
-                profileURL: "",
-                senderName: "",
-              },
-            ].map((element, index) => (
+            {contactList.map((element, index) => (
               <div
                 key={`${crypto.randomUUID()}-${index}`}
-                className="hover:bg-gray d-flex align-items-center gap-1 w-100 p-2 mb-2 rounded-3"
-                // style={{}}
+                className="hover:bg-gray d-flex align-items-center gap-3 w-100 p-2 mb-2 rounded-3"
+                style={{}}
               >
                 <div
-                  className="bg-danger d-flex justify-content-center align-items-center rounded-circle"
+                  className="bg-secondary d-flex justify-content-center align-items-center rounded-circle overflow-hidden"
                   style={{ width: "50px", height: "50px" }}
                 >
-                  <User size={26} className="text-white" />
+                  {element.profileURL ? (
+                    <img src={element.profileURL} className="w-100 h-100" />
+                  ) : (
+                    <User size={26} className="text-white" />
+                  )}
                 </div>
-                <div className=""></div>
+                <div className="text-secondary h4 mt-2">
+                  {element.senderName}
+                </div>
               </div>
             ))}
           </div>

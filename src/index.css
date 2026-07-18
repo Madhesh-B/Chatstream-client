@@ -3,15 +3,16 @@ html {
 }
 
 body {
-  background: #000; 
+  background: #000;
 }
 
+
 .cursor-cw {
-  cursor: url("./assets/cursor/cursor-white-stroke.png"), auto !important;  
+  cursor: url("./assets/cursor/cursor-white-stroke.png"), auto !important;
 }
 
 .cursor-co {
-  cursor: url("./assets/cursor/cursor.png"), auto !important;  
+  cursor: url("./assets/cursor/cursor.png"), auto !important;
 }
 
 .hover\:bg-gray {
@@ -21,4 +22,42 @@ body {
 .hover\:bg-gray:hover {
   background: rgb(39, 38, 38);
   cursor: pointer;
+}
+
+.styled-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: purple #000;
+}
+
+.styled-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+
+.styled-scrollbar::-webkit-scrollbar-track {
+  background: #000;
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  background: purple;
+  border-radius: 5px;
+}
+
+.styled-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: purple;
+}
+
+.h-80vh {
+  height: 80vh;
+}
+
+.max-w-500px {
+  max-width: 500px;
+}
+
+.end-20px {
+  right: 20px;
+}
+
+.outline-none {
+  outline: none;
 }

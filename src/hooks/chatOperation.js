@@ -26,8 +26,8 @@ export const useSetPreviousChat = () => {
 export const useAddMessage = () => {
   const dispatch = useDispatch();
   const { uid } = useSelector((state) => state.auth);
-  return useCallback((content, senderId = uid, timestamp = Date.now()) => {
-    const newMessage = { id: crypto.randomUUID(), content, senderId, timestamp };
+  return useCallback(({ id = crypto.randomUUID(), content, senderId = uid, timestamp = Date.now() }) => {
+    const newMessage = { id, content, senderId, timestamp };
     dispatch(addmessage(newMessage));
     return newMessage;
   }, [uid]);

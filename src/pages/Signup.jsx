@@ -80,6 +80,7 @@ const Signup = () => {
           spellCheck="false"
           autoCorrect="off"
           autoCapitalize="off"
+          autoFocus
           id="userName"
         />
       </div>

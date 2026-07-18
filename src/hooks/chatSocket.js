@@ -37,7 +37,7 @@ export const useSendMessage = () => {
   const emit = useSocketEmit();
   return (message) => {
     if (!emit) return;
-    const messageInfo = addMessage(message);
+    const messageInfo = addMessage({ content: message });
     emit("send_message", messageInfo);
   }
 }
@@ -80,7 +80,7 @@ export const useRecieveSignal = () => {
   });
 
   useSocketOn("recieve_message", ({ id, content, senderId, timestamp }) => {
-    addMessage(id, content, senderId, timestamp);
+    addMessage({ id, senderId, content, timestamp });
   });
 
   useSocketOn("edit_message", ({ messageId, content }) => {

@@ -78,6 +78,7 @@ const Login = () => {
           name="username"
           autoCorrect="off"
           autoCapitalize="off"
+          autoFocus
           id="userName"
         />
       </div>

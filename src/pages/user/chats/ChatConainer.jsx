@@ -90,7 +90,7 @@ const ChatConainer = () => {
                     <User size={26} className="text-white" />
                   )}
                 </div>
-                <div className="text-secondary h4 mt-2">
+                <div className="text-secondary h4 mt-2 user-select-none">
                   {element.senderName}
                 </div>
               </div>

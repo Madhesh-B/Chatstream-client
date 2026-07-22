@@ -42,8 +42,8 @@ export const useEditMessage = () => {
 
 export const useDeleteMessage = () => {
   const dispatch = useDispatch();
-  return (id, senderName) => {
-    dispatch(deleteMessage({ id, senderName }));
+  return (id, senderName, index) => {
+    dispatch(deleteMessage({ id, senderName, index }));
   }
 };
 

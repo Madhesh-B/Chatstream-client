@@ -36,13 +36,12 @@ const chatSlice = createSlice({
       })
     },
     deleteMessage: (state, action) => {
-      const { id, senderName } = action.payload;
-      return state.chats.map((message) => {
-        if (message.id !== id) return message;
+      const { id, senderName, index } = action.payload;
+      const message = state.chats[index];
+      if (id === message.id) {
         message.content = `${senderName} deleted the message`;
         message.isDeleted = true;
-        return message;
-      })
+      }
     },
     clearChat: (state) => {
       state.chats = [];

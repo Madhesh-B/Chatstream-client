@@ -1,4 +1,10 @@
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { Copy, Edit, Send, Trash2, User } from "lucide-react";
 
@@ -11,7 +17,7 @@ import {
 } from "../../../hooks/chatSocket";
 import formatTime from "../../../utility/formatTime";
 
-const ChatBlock = ({ chatId, senderId, profileURL }) => {
+const ChatBlock = React.memo(({ chatId, senderId, profileURL }) => {
   const [message, setMessage] = useState("");
   const [contextMenuIndex, setContextMenuIndex] = useState(-1);
 
@@ -32,22 +38,48 @@ const ChatBlock = ({ chatId, senderId, profileURL }) => {
     {
       icon: Copy,
       text: "Copy To Clipboard",
-      onClick: async (index) => {
+      onClick: async ({ content }) => {
         try {
-          console.log(chats[index]?.content, index);
-
-          await navigator.clipboard.writeText(chats[index]?.content || "");
+          await navigator.clipboard.writeText(content);
         } catch (error) {
           console.warn("Browser not Supported Copy Option!");
         } finally {
-          handleClickOutSide();
+          closeContextMenu();
         }
       },
     },
-    { icon: Edit, text: "Edit" },
-    { icon: Trash2, text: "Trash" },
+    {
+      icon: Edit,
+      text: "Edit",
+      onClick: (data) => {
+        console.log(data);
+      },
+    },
+    {
+      icon: Trash2,
+      text: "Unsend",
+      onClick: ({ id }, index) => {
+        deleteMessage(id, index);
+        closeContextMenu();
+      },
+    },
   ];
-  const sendByUser = [{ icon: Copy, text: "Copy To Clipboard" }];
+
+  const sendByUser = [
+    {
+      icon: Copy,
+      text: "Copy To Clipboard",
+      onClick: async ({ content }) => {
+        try {
+          await navigator.clipboard.writeText(content);
+        } catch (error) {
+          console.warn("Browser not Supported Copy Option!");
+        } finally {
+          closeContextMenu();
+        }
+      },
+    },
+  ];
 
   useRecieveSignal();
 
@@ -64,6 +96,8 @@ const ChatBlock = ({ chatId, senderId, profileURL }) => {
 
     const handleClickOutSide = (e) => {
       const menu = contextMenuRef.current[contextMenuIndex];
+      console.log(!menu?.contains(e.target));
+
       if (!menu?.contains(e.target)) return;
       openedMenuRef.current?.classList.remove("d-flex");
       openedMenuRef.current?.classList.add("d-none");
@@ -106,7 +140,7 @@ const ChatBlock = ({ chatId, senderId, profileURL }) => {
     [contextMenuIndex],
   );
 
-  const handleClickOutSide = () => {
+  const closeContextMenu = () => {
     openedMenuRef.current?.classList.remove("d-flex");
     openedMenuRef.current?.classList.add("d-none");
     openedMenuRef.current = null;
@@ -150,19 +184,35 @@ const ChatBlock = ({ chatId, senderId, profileURL }) => {
               <div
                 key={chat.id}
                 className={`position-relative w-100 d-flex flex-column ${chat.senderId == uid ? "align-items-end" : "align-items-start"} px-4 py-2 user-select-none`}
-                onContextMenu={(e) => handleContextMenu(e, index)}
               >
-                <div className="max-w-500px p-3 bg-secondary rounded-2">
-                  {chat.content}
-                </div>
-                <div className="text-light text-uppercase">
-                  {formatTime(chat.timestamp)}
-                </div>
-                <ContextMenu
-                  ref={(el) => (contextMenuRef.current[index] = el)}
-                  options={chat.senderId == uid ? sendByMe : sendByUser}
-                  pos={index}
-                />
+                {chat.isDeleted ? (
+                  <>
+                    <div className="max-w-500px p-3 bg-secondary rounded-2">
+                      {chat.content}
+                    </div>
+                    <div className="text-light text-uppercase">
+                      {formatTime(chat.timestamp)}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="max-w-500px p-3 bg-secondary rounded-2"
+                      onContextMenu={(e) => handleContextMenu(e, index)}
+                    >
+                      {chat.content}
+                    </div>
+                    <div className="text-light text-uppercase">
+                      {formatTime(chat.timestamp)}
+                    </div>
+                    <ContextMenu
+                      ref={(el) => (contextMenuRef.current[index] = el)}
+                      options={chat.senderId == uid ? sendByMe : sendByUser}
+                      data={chat}
+                      index={index}
+                    />
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -201,9 +251,9 @@ const ChatBlock = ({ chatId, senderId, profileURL }) => {
       )}
     </>
   );
-};
+});
 
-const ContextMenu = forwardRef(({ options, pos }, ref) => {
+const ContextMenu = forwardRef(({ options, data, index }, ref) => {
   return (
     <div
       ref={ref}
@@ -213,7 +263,7 @@ const ContextMenu = forwardRef(({ options, pos }, ref) => {
         <div
           key={option.text}
           className="btn w-100 text-white d-flex justify-content-start align-items-center gap-2"
-          onClick={() => option.onClick(pos)}
+          onClick={() => option.onClick(data, index)}
         >
           <div className="px-2 py-1">
             <option.icon />

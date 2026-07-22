@@ -56,10 +56,10 @@ export const useDeleteSignal = () => {
   const deleteMessage = useDeleteMessage();
   const emit = useSocketEmit();
   const { userName } = useSelector((state) => state.auth);
-  return (messageId) => {
+  return (messageId, index) => {
     if (!emit) return;
-    deleteMessage(messageId, userName);
-    emit("delete_message", { messageId, senderName: userName })
+    deleteMessage(messageId, userName, index);
+    emit("delete_message", { messageId, senderName: userName, index });
   }
 }
 
@@ -87,8 +87,9 @@ export const useRecieveSignal = () => {
     editMessage(messageId, content);
   });
 
-  useSocketOn("delete_message", ({ id, senderName }) => {
-    deleteMessage(id, senderName);
+  useSocketOn("delete_message", ({ id, senderName, index }) => {
+    console.log({ id, senderName, index });
+    deleteMessage(id, senderName, index);
   });
 
   useSocketOn("error_message", ({ message }) => {
